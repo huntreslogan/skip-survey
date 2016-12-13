@@ -16,16 +16,22 @@ module.exports = function(request, response) {
 
   SurveyResponse.findOne({
     phone:phone,
-    complete:false
+    // complete:false
   }, function(err, doc) {
+
     if(!doc){
       var newSurvey = new SurveyResponse({
-      phone:phone
+      phone:phone,
+      complete:false
     });
-    newSurvey.save(function(err, doc) {
-      handleNextQuestion(err, doc, 0);
-    });
-  }else {
+      newSurvey.save(function(err, doc) {
+        handleNextQuestion(err, doc, 0);
+      });
+    }else if(doc && doc.complete === true){
+      console.log("success!");
+      var messageComplete = "Thank you for taking our survey!";
+      return respond(messageComplete);
+    }else{
     SurveyResponse.advanceSurvey({
       phone:phone,
       input:input,
@@ -34,26 +40,51 @@ module.exports = function(request, response) {
   }
   });
 
+  // SurveyResponse.findOne({
+  //   phone:phone,
+  //   complete:true
+  // }, function(err, doc){
+  //
+  // });
+
   function handleNextQuestion(err, surveyResponse, questionIndex) {
     var question = survey[questionIndex];
     var responseMessage = '';
+    console.log(questionIndex);
 
     if(err || !surveyResponse) {
       return respond("Sorry but an error has occured" + "Please submit your answer again");
     }
 
-    if(!question) {
-      return respond("Thanks you for taking our survey!");
+    // if(questionIndex === null){
+    //   return respond("You are not old enough to take our survey but feel free to try again later!");
+    // }
+
+    if(questionIndex >= survey.length + 1){
+      return respond("Looks like you have completed our survey already! Thanks and have a great day!");
+    }
+
+    if(!question || questionIndex === null) {
+      return respond("Thank you for taking our survey!");
     }
 
     if(questionIndex === 0) {
       responseMessage+= 'Thank you for taking our survey!';
     }
 
+    // try{
+    //   if(typeof checkAnswer !== "undefined" && checkAnswer){
+    //   console.log("is it false: " + surveyResponse.responses[0].answer);
+    //   }
+    // }catch (e){
+    //   console.log(e);
+    // }
+
+
     responseMessage+= question.text;
 
     if(question.type === 'boolean') {
-      responseMessage+= 'Type yes or no';
+      responseMessage+= ' Type yes or no';
     }
 
     respond(responseMessage);

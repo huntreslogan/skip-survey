@@ -1,14 +1,17 @@
 module.exports = [
     {
-        text: 'Please tell us your age.',
-        type: 'number'
-    },
-    {
-        text: 'Have you ever jump-kicked a lemur?',
+        id: '1',
+        text: ' Please confirm that you are over 18 to continue with the survey.',
         type: 'boolean'
     },
     {
-        text: 'Who is your favorite Teenage Mutant Ninja Turtle and why?',
-        type: 'text'
+        id: '2',
+        text: 'Did you attend the volunteer event at Lake Merritt?',
+        type: 'boolean'
+    },
+    {
+        id: '3',
+        text: 'Is this your first time volunteering at the Garden?',
+        type: 'boolean'
     }
 ];
