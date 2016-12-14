@@ -20,6 +20,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
     var input = args.input;
     var surveyResponse;
     var currentQuestion;
+    var nextIndex;
 
     // if(currentQuestion.id === '1' && input.toLowerCase() === 'no'){
     //   console.log("too young");
@@ -47,7 +48,11 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
       responseLength = surveyResponse.responses.length;
 
       var questionResponse = {};
-      currentQuestion = surveyData[responseLength];
+
+      if(responseLength === 0 || responseLength === 1){
+        currentQuestion = surveyData[responseLength];
+      }
+      // currentQuestion = surveyData[responseLength];
 
       if(currentQuestion.id === '1' && input.toLowerCase() === 'no'){
         console.log("too young");
@@ -94,7 +99,16 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
 
-
+      function skipQuestion(){
+        if(currentQuestion.id === '2' && Number(input) < 3){
+          nextIndex = 2;
+        }else if(currentQuestion.id === '2' && Number(input) > 3){
+          nextIndex = 3;
+        }else{
+          //need next question logic
+        }
+        return nextIndex;
+      }
 
       surveyResponse.save(function(err) {
         if(err || typeof currentQuestion === 'undefined') {

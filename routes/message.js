@@ -72,15 +72,6 @@ module.exports = function(request, response) {
       responseMessage+= 'Thank you for taking our survey!';
     }
 
-    // try{
-    //   if(typeof checkAnswer !== "undefined" && checkAnswer){
-    //   console.log("is it false: " + surveyResponse.responses[0].answer);
-    //   }
-    // }catch (e){
-    //   console.log(e);
-    // }
-
-
     responseMessage+= question.text;
 
     if(question.type === 'boolean') {
