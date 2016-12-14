@@ -18,5 +18,20 @@ module.exports = [
       id: '4',
       text: 'Do you feel that the event was too beginner to be helpfull?',
       type: 'boolean'
+    },
+    {
+      id: '5',
+      text: 'Did you attend the entire event?',
+      type: 'boolean'
+    },
+    {
+      id: '5',
+      text: 'Do you feel that the event was too long?',
+      type: 'boolean'
+    },
+    {
+      id: '6',
+      text: 'Would you attend another Hackathon in the future?',
+      type: 'boolean'
     }
 ];

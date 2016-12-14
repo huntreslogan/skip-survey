@@ -13,6 +13,11 @@ var SurveyResponseSchema = new mongoose.Schema({
     responses: [mongoose.Schema.Types.Mixed]
 });
 
+Object.prototype.in = function() {
+    for(var i=0; i<arguments.length; i++)
+       if(arguments[i] == this) return true;
+    return false;
+};
 
 SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
     var surveyData = args.survey;
@@ -20,7 +25,6 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
     var input = args.input;
     var surveyResponse;
     var currentQuestion;
-    var nextIndex;
 
     // if(currentQuestion.id === '1' && input.toLowerCase() === 'no'){
     //   console.log("too young");
@@ -99,7 +103,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
 
-      function skipQuestion(){
+      var nextIndex = function(){
         if(currentQuestion.id === '2' && Number(input) < 3){
           nextIndex = 2;
         }else if(currentQuestion.id === '2' && Number(input) > 3){
@@ -107,8 +111,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         }else{
           //need next question logic
         }
-        return nextIndex;
-      }
+      };
 
       surveyResponse.save(function(err) {
         if(err || typeof currentQuestion === 'undefined') {
@@ -117,9 +120,11 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         }else if(surveyResponse.complete === true){
           console.log("done!");
           cb.call(surveyResponse, err, surveyResponse, null);
-        }else{
+        }else if(responseLength.in(0,1,2)){
           console.log("all good and survey complete is: " + surveyResponse.complete);
           cb.call(surveyResponse, err, surveyResponse, responseLength + 1);
+        }else{
+          cb.call(surveyResponse, err, surveyResponse, nextIndex);
         }
       });
     }
