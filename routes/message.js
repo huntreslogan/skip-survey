@@ -22,7 +22,8 @@ module.exports = function(request, response) {
     if(!doc){
       var newSurvey = new SurveyResponse({
       phone:phone,
-      complete:false
+      complete:false,
+      skipQuestion:null
     });
       newSurvey.save(function(err, doc) {
         handleNextQuestion(err, doc, 0);
@@ -40,25 +41,15 @@ module.exports = function(request, response) {
   }
   });
 
-  // SurveyResponse.findOne({
-  //   phone:phone,
-  //   complete:true
-  // }, function(err, doc){
-  //
-  // });
 
   function handleNextQuestion(err, surveyResponse, questionIndex) {
     var question = survey[questionIndex];
     var responseMessage = '';
-    console.log(questionIndex);
+    // console.log(questionIndex);
 
     if(err || !surveyResponse) {
       return respond("Sorry but an error has occured" + "Please submit your answer again");
     }
-
-    // if(questionIndex === null){
-    //   return respond("You are not old enough to take our survey but feel free to try again later!");
-    // }
 
     if(questionIndex >= survey.length + 1){
       return respond("Looks like you have completed our survey already! Thanks and have a great day!");
