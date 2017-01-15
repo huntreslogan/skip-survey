@@ -145,10 +145,10 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
                return 2;
              }else if(surveyResponse.responses[responseLength].id === '2' && Number(input) > 3){
                return 3;
-             }else{
+             }else if (responseLength === 2){
                //need next question logic
                console.log('hi');
-               return null;
+               return 4;
              }
             })();
           cb.call(surveyResponse, err, surveyResponse, nextIndex);
