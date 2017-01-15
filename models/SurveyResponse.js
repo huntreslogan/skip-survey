@@ -46,6 +46,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
     function processInput() {
       var responseLength;
       var skipQuestion;
+      var previous;
 
       responseLength = surveyResponse.responses.length;
       console.log(responseLength + " is the length now");
@@ -58,21 +59,28 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
       //the next question in our surveyData
       //this index for the next question in our skip logic is especially important when we pass it as the last argument in our callback (nextIndex) contained in the save
 
-      if(currentQuestion && typeof currentQuestion.id !== 'undefined' && surveyResponse.complete !== true && responseLength > 1){
-        if(currentQuestion.id === 2 && Number(input) < 3){
-          skipQuestion =  2;
-        }else if(currentQuestion.id === 2 && Number(input) >3){
-          skipQuestion = 3;
-        }else{
-          skipQuestion = 4;
-        }
-        currentQuestion = surveyData[skipQuestion];
+
+
+      currentQuestion = surveyData[responseLength];
+
+      if(responseLength > 1 && currentQuestion && surveyResponse.complete !== true){
+        previous = surveyResponse.responses[responseLength - 1].id;
+        console.log(previous + ' is the last question asked');
+        // if(currentQuestion.id === 2 && Number(input) < 3){
+        //   skipQuestion =  2;
+        // }else if(currentQuestion.id === 2 && Number(input) >3){
+        //   skipQuestion = 3;
+        // }else{
+        //   skipQuestion = 4;
+        // }
+        // currentQuestion = surveyData[skipQuestion];
       }
 
-      if(responseLength === 0 || responseLength === 1){
-        currentQuestion = surveyData[responseLength];
-        console.log(currentQuestion.id + ' is the currentQuestion');
-      }
+
+      // if(responseLength === 0 || responseLength === 1){
+      //   currentQuestion = surveyData[responseLength];
+      //   console.log(currentQuestion.id + ' is the currentQuestion');
+      // }
 
       function reask() {
         cb.call(surveyResponse, null, surveyResponse, responseLength);
@@ -112,16 +120,6 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
 
-        var current;
-
-        if(responseLength < 1 && current === 2 && Number(input) < 3){
-          skipQuestion =  2;
-        }else if(responseLength < 1 && current === 2 && Number(input) >3){
-          skipQuestion = 3;
-        }else{
-          skipQuestion = 4;
-        }
-
 
 
 
@@ -137,20 +135,20 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         }else if(responseLength === 0){
           console.log("all good and survey complete is: " + surveyResponse.complete + ' and response length = ' + responseLength);
           cb.call(surveyResponse, err, surveyResponse, responseLength + 1);
-        }else{
+        }else if(responseLength >= 1){
           //was determining the nextIndex here and then passing to the callback handleNextQuestion but anything set in this save won't be accessible anywhere else in the code
           //I was hoping to be able to pass this as the index for the next question in the skip logic here, but also save it to a global variable so that I can use it
           //to set the currentQuestion variable earlier on in the processInput function
           console.log("Skip time and survey complete is: " + surveyResponse.complete + ' and response length = ' + responseLength);
             nextIndex = (function(){
-             if(currentQuestion.id === '2' && Number(input) < 3){
+             if(surveyResponse.responses[responseLength].id === '2' && Number(input) < 3){
                return 2;
-             }else if(currentQuestion.id === '2' && Number(input) > 3){
+             }else if(surveyResponse.responses[responseLength].id === '2' && Number(input) > 3){
                return 3;
              }else{
                //need next question logic
                console.log('hi');
-               return 4;
+               return null;
              }
             })();
           cb.call(surveyResponse, err, surveyResponse, nextIndex);
