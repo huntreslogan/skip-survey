@@ -19,11 +19,11 @@ module.exports = function(request, response) {
     // complete:false
   }, function(err, doc) {
 
-    if(!doc){
+    if(!doc && input.toLowerCase() === 'hackathon'){
+      console.log(input);
       var newSurvey = new SurveyResponse({
       phone:phone,
       complete:false,
-      skipQuestion:null
     });
       newSurvey.save(function(err, doc) {
         handleNextQuestion(err, doc, 0);
@@ -32,12 +32,14 @@ module.exports = function(request, response) {
       console.log("success!");
       var messageComplete = "Thank you for taking our survey!";
       return respond(messageComplete);
-    }else{
+    }else if(doc){
     SurveyResponse.advanceSurvey({
       phone:phone,
       input:input,
       survey:survey
     }, handleNextQuestion);
+  }else {
+    return respond('Please text hackathon if you would like to take our survey.');
   }
   });
 

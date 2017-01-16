@@ -9,11 +9,6 @@ var SurveyResponseSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-
-    skipQuestion: {
-      type: Number,
-      default: null
-    },
     // record of answers
     responses: [mongoose.Schema.Types.Mixed]
 });
