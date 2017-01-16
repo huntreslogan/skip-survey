@@ -146,9 +146,11 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
              }else if(surveyResponse.responses[responseLength].id === '2' && Number(input) > 3){
                return 3;
              }else if (responseLength === 2){
-               //need next question logic
-               console.log('hi');
                return 4;
+             }else if(responseLength === 3 && input.toLowerCase() === 'yes'){
+               return 6;
+             }else if(responseLength === 3 && input.toLowerCase() === 'no'){
+               return 5;
              }
             })();
           cb.call(surveyResponse, err, surveyResponse, nextIndex);
