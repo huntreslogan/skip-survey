@@ -58,7 +58,7 @@ module.exports = function(request, response) {
     }
 
     if(!question || questionIndex === null) {
-      return respond("Thank you for taking our survey!");
+      return respond("Thank you for taking our survey! We hope to see you at the next Twilio hackathon where doers are always welcome.");
     }
 
     if(questionIndex === 0) {

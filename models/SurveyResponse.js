@@ -61,11 +61,16 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         currentQuestion = surveyData[6];
       }else if(responseLength === 4 && surveyResponse.responses[responseLength - 1].answer === false){
         currentQuestion = surveyData[5];
-      }else if (responseLength === 4 && input.toLowerCase() === 'yes') {
-        return 8;
-      }else if(responseLength === 4 && input.toLowerCase() === 'no'){
-        return 7;
+      }else if (responseLength === 5 && surveyResponse.responses[responseLength - 2].answer === false && surveyResponse.responses[responseLength - 1].answer === true) {
+        currentQuestion = surveyData[7];
+      }else if(responseLength === 5 && surveyResponse.responses[responseLength - 2].answer === true && surveyResponse.responses[responseLength - 1].answer === true){
+        currentQuestion = surveyData[8];
+      }else if (responseLength === 5 && surveyResponse.responses[responseLength - 2].answer === true && surveyResponse.responses[responseLength - 1].answer === false){
+        currentQuestion = surveyData[7];
+      }else if(responseLength === 5 && surveyResponse.responses[responseLength - 2].answer === false && surveyResponse.responses[responseLength - 1].answer === false){
+        currentQuestion = surveyData[8];
       }else{
+        surveyResponse.complete = true;
         return null;
       }
       // currentQuestion = surveyData[responseLength];
@@ -115,7 +120,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
 
       }
 
-      if(surveyResponse.responses.length === surveyData.length){
+      if(surveyResponse.responses.length === 6){
         surveyResponse.complete = true;
         console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
@@ -143,9 +148,13 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
                return 6;
              }else if(responseLength === 3 && input.toLowerCase() === 'no'){
                return 5;
-             }else if (responseLength === 4 && input.toLowerCase() === 'yes') {
+             }else if (responseLength === 4 && input.toLowerCase() === 'yes' && surveyResponse.responses[responseLength -1].answer === true) {
                return 8;
-             }else if(responseLength === 4 && input.toLowerCase() === 'no'){
+             }else if(responseLength === 4 && input.toLowerCase() === 'no' && surveyResponse.responses[responseLength -1].answer === false){
+               return 8;
+             }else if(responseLength === 4 && input.toLowerCase() === 'no' && surveyResponse.responses[responseLength -1].answer === true){
+               return 7;
+             }else if(responseLength === 4 && input.toLowerCase() === 'yes' && surveyResponse.responses[responseLength -1].answer === false){
                return 7;
              }else{
                return null;
