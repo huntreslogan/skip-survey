@@ -11,13 +11,13 @@ module.exports = [
     },
     {
         id: '3',
-        text: 'Do you feel that the event was too advanced to be helpfull?',
-        type: 'boolean'
+        text: 'Do you feel that the event was too advanced to be helpfull and if so why?',
+        type: 'text'
     },
     {
       id: '4',
-      text: 'Do you feel that the event was too beginner to be helpfull?',
-      type: 'boolean'
+      text: 'Do you feel that the event was too beginner to be helpfull and if so why?',
+      type: 'text'
     },
     {
       id: '5',
