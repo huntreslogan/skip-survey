@@ -22,12 +22,10 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
     var currentQuestion;
     var nextIndex;
 
-    // var skipQuestion;
 
     // Find current incomplete survey
     SurveyResponse.findOne({
         phone: phone,
-        // complete: false
     }, function(err, doc) {
         surveyResponse = doc || new SurveyResponse({
             phone: phone
@@ -48,34 +46,34 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
 
       var questionResponse = {};
 
-      //still need to figure out how to set the currentQuestion value when in the skip logic
-      //can't select from the surveyData based on the length of responses
-      //need to alter this to take the current question in the surveydata and use that with the input in this conditional to select the right index to return for
-      //the next question in our surveyData
-      //this index for the next question in our skip logic is especially important when we pass it as the last argument in our callback (nextIndex) contained in the save
+      if(responseLength <=1 ){
 
-
-
-      currentQuestion = surveyData[responseLength];
+        currentQuestion = surveyData[responseLength];
+        console.log('not good');
+      }else if(responseLength === 2 && surveyResponse.responses[responseLength - 1].answer < 3){
+        currentQuestion = surveyData[2];
+        console.log(currentQuestion.id + " is the id when setting the currentQuestion");
+      }else if(responseLength === 2 && surveyResponse.responses[responseLength - 1].answer >= 3){
+        currentQuestion = surveyData[3];
+      }else if (responseLength === 3){
+        currentQuestion = surveyData[4];
+      }else if(responseLength === 3 && input.toLowerCase() === 'yes'){
+        return 6;
+      }else if(responseLength === 3 && input.toLowerCase() === 'no'){
+        return 5;
+      }else if (responseLength === 4 && input.toLowerCase() === 'yes') {
+        return 8;
+      }else if(responseLength === 4 && input.toLowerCase() === 'no'){
+        return 7;
+      }else{
+        return null;
+      }
+      // currentQuestion = surveyData[responseLength];
 
       if(responseLength > 1 && currentQuestion && surveyResponse.complete !== true){
         previous = surveyResponse.responses[responseLength - 1].id;
         console.log(previous + ' is the last question asked');
-        // if(currentQuestion.id === 2 && Number(input) < 3){
-        //   skipQuestion =  2;
-        // }else if(currentQuestion.id === 2 && Number(input) >3){
-        //   skipQuestion = 3;
-        // }else{
-        //   skipQuestion = 4;
-        // }
-        // currentQuestion = surveyData[skipQuestion];
       }
-
-
-      // if(responseLength === 0 || responseLength === 1){
-      //   currentQuestion = surveyData[responseLength];
-      //   console.log(currentQuestion.id + ' is the currentQuestion');
-      // }
 
       function reask() {
         cb.call(surveyResponse, null, surveyResponse, responseLength);
@@ -89,7 +87,9 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         if(currentQuestion.type === 'boolean') {
           if(input.toLowerCase() !== 'yes' && input.toLowerCase() !== 'no'){
             reask();
-          }else {
+          }else if(currentQuestion.id === '1' && input.toLowerCase() === 'no'){
+            surveyResponse.complete = true;
+          }else{
             var isTrue = input === '1' || input.toLowerCase() === 'yes';
             questionResponse.answer = isTrue;
             console.log("just asked a boolean");
@@ -101,11 +101,16 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
           } else{
             questionResponse.answer = num;
           }
-        }else {
+        }else if(input.toLowerCase() !== 'skip' && currentQuestion.type === 'text'){
           questionResponse.answer = input;
+        }else {
+          console.log('skipping to the end');
+          surveyResponse.complete = true;
+
         }
         questionResponse.type = currentQuestion.type;
         questionResponse.id = currentQuestion.id;
+        console.log(questionResponse.id + ' is the id for the currentQuestion.');
         surveyResponse.responses.push(questionResponse);
 
       }
@@ -115,11 +120,6 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
 
-
-
-
-      //the surveyresponse is saved and after that is completed the callback is executed
-      //this is where the handleNextQuestion callback function is called and the index of the next question is passed
       surveyResponse.save(function(err) {
         if(err || typeof currentQuestion === 'undefined') {
           console.log("inside the error checker");
@@ -131,14 +131,11 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
           console.log("all good and survey complete is: " + surveyResponse.complete + ' and response length = ' + responseLength);
           cb.call(surveyResponse, err, surveyResponse, responseLength + 1);
         }else if(responseLength >= 1){
-          //was determining the nextIndex here and then passing to the callback handleNextQuestion but anything set in this save won't be accessible anywhere else in the code
-          //I was hoping to be able to pass this as the index for the next question in the skip logic here, but also save it to a global variable so that I can use it
-          //to set the currentQuestion variable earlier on in the processInput function
           console.log("Skip time and survey complete is: " + surveyResponse.complete + ' and response length = ' + responseLength);
             nextIndex = (function(){
              if(surveyResponse.responses[responseLength].id === '2' && Number(input) < 3){
                return 2;
-             }else if(surveyResponse.responses[responseLength].id === '2' && Number(input) > 3){
+             }else if(surveyResponse.responses[responseLength].id === '2' && Number(input) >= 3){
                return 3;
              }else if (responseLength === 2){
                return 4;
@@ -146,8 +143,16 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
                return 6;
              }else if(responseLength === 3 && input.toLowerCase() === 'no'){
                return 5;
+             }else if (responseLength === 4 && input.toLowerCase() === 'yes') {
+               return 8;
+             }else if(responseLength === 4 && input.toLowerCase() === 'no'){
+               return 7;
+             }else{
+               return null;
              }
             })();
+
+          console.log(nextIndex);
           cb.call(surveyResponse, err, surveyResponse, nextIndex);
         }
       });

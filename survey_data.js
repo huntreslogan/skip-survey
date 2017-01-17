@@ -25,13 +25,23 @@ module.exports = [
       type: 'boolean'
     },
     {
-      id: '5',
+      id: '6',
       text: 'Do you feel that the event was too long?',
       type: 'boolean'
     },
     {
-      id: '6',
+      id: '7',
       text: 'Would you attend another Hackathon in the future?',
       type: 'boolean'
+    },
+    {
+      id: '8',
+      text: 'Is there some feedback that you would like to share to help us improve our events? Share your feedback or text skip to continue.',
+      type: 'text'
+    },
+    {
+      id: '9',
+      text: 'Is there a topic you would like to suggest for our next Hackathon? Share your topic or text skip to go to the next question in the survey.',
+      type: 'text'
     }
 ];
