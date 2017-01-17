@@ -36,12 +36,12 @@ module.exports = [
     },
     {
       id: '8',
-      text: 'Is there some feedback that you would like to share to help us improve our events? Share your feedback or text skip to continue.',
+      text: 'Is there some feedback that you would like to share to help us improve our events? Share your feedback or text skip to finish the survey.',
       type: 'text'
     },
     {
       id: '9',
-      text: 'Is there a topic you would like to suggest for our next Hackathon? Share your topic or text skip to go to the next question in the survey.',
+      text: 'Is there a topic you would like to suggest for our next Hackathon? Share your topic or text skip to finish the survey.',
       type: 'text'
     }
 ];
