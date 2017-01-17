@@ -57,10 +57,10 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         currentQuestion = surveyData[3];
       }else if (responseLength === 3){
         currentQuestion = surveyData[4];
-      }else if(responseLength === 3 && input.toLowerCase() === 'yes'){
-        return 6;
-      }else if(responseLength === 3 && input.toLowerCase() === 'no'){
-        return 5;
+      }else if(responseLength === 4 && surveyResponse.responses[responseLength - 1].answer === true){
+        currentQuestion = surveyData[6];
+      }else if(responseLength === 4 && surveyResponse.responses[responseLength - 1].answer === false){
+        currentQuestion = surveyData[5];
       }else if (responseLength === 4 && input.toLowerCase() === 'yes') {
         return 8;
       }else if(responseLength === 4 && input.toLowerCase() === 'no'){
