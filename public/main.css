@@ -14,3 +14,18 @@ td {
     padding:5px;
     text-align: left;
 }
+
+#full-width {
+  width: 100%;
+}
+
+#brand {
+  height: 54px;
+  width: 54px;
+  float: left;
+  margin-top: 5px;
+}
+
+h3 {
+  color: #777;
+}

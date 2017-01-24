@@ -19,41 +19,101 @@
     <link rel="stylesheet" href="main.css">
   </head>
   <body>
+    <nav class='navbar navbar-default'>
+      <div class='container-fluid'>
+          <div class='navbar-header'>
+            <a alt='brand'><img id='brand' src='//twilio.com/bundles/marketing/img/favicons/favicon.ico' /></a>
+          </div>
+          <h1 class='navbar-text text-center'>Hackathon Survey Results</h1>
+      </div>
+
+    </nav>
     <section id="main" class="container">
-      <h1>Skip Survey Results</h1>
-      <p>View the latest survey results here: </p>
-      <h3>You have <span id="total"></span> responses</h3>
       <div class="row">
-        <div class="col-sm-6">
-            <h3>"Please tell us your age."</h3>
-            <canvas id="ageChart" width="300" height="300"></canvas>
+        <div class="col-sm-4">
+            <h3>Confirmed Event Attendees</h3>
+            <canvas id="attendeeChart" width="300" height="300"></canvas>
         </div>
-        <div class="col-sm-6">
-            <h3>"Have you ever jump-kicked a lemur?"</h3>
-            <canvas id="lemurChart" width="300" height="300"></canvas>
+        <div class="col-sm-4">
+            <h3>Attended Entire Event</h3>
+            <canvas id="eventChart" width="300" height="300"></canvas>
+        </div>
+        <div class="col-sm-4">
+            <h3>Coding Experience</h3>
+            <canvas id="yearsChart" width="300" height="300"></canvas>
         </div>
       </div>
 
-      <div class="row">
-          <h3>"Who is your favorite Ninja Turtle and why?"</h3>
-          <table id="turtleResponses">
+      <!-- <div class="row">
+          <h3 id="feedbackQuestion">"Is there some feedback that you would like to share to help us improve our events?"</h3>
+          <table id="feedbackResponses">
               <tr>
-                  <th>Response Text / Transcript</th>
-                  <th>Recording</th>
+                  <th>Response Text</th>
               </tr>
           </table>
+          <h3 id="topicQuestion">Is there a topic you would like to suggest for our next Hackathon?</h3>
+          <table id="topicResponses">
+              <tr>
+                  <th>Response Text</th>
+              </tr>
+          </table>
+      </div> -->
+
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Was the event too beginner/advanced for you and why?
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+              <ol id="levelResponses" class='list-group'></ol>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <span data-toggle='tooltip' data-placement='right' title='Click to see responses'>Is there some feedback that you would like to share to help us improve our events?</span>
+              </a>
+            </h4>
+          </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+              <ol class='list-group' id="feedbackResponses"></ol>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <span data-toggle='tooltip' data-placement='right' title='Click to see responses'>Is there a topic you would like to suggest for our next Hackathon?</span>
+              </a>
+            </h4>
+          </div>
+          <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+              <ol class='list-group' id="topicResponses"></ol>
+            </div>
+          </div>
+        </div>
       </div>
 
     </section>
 
     <footer class="container">
-    Made with <i class="fa fa-heart"></i> by your pals
-    <a href="http://www.twilio.com">@twilio</a>
+
     </footer>
 
     <!-- JS Dependencies -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="chart.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- App script -->
     <script src="index.js"></script>
