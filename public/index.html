@@ -22,9 +22,9 @@
     <nav class='navbar navbar-default'>
       <div class='container-fluid'>
           <div class='navbar-header'>
-            <a alt='brand'><img id='brand' src='//twilio.com/bundles/marketing/img/favicons/favicon.ico' /></a>
+            <a alt='brand' href="#"><img id='brand' src='//twilio.com/bundles/marketing/img/favicons/favicon.ico' /></a>
           </div>
-          <h1 class='navbar-text text-center'>Hackathon Survey Results</h1>
+          <h1 class='navbar-text text-center'>Twilio Hackathon Survey Results</h1>
       </div>
 
     </nav>
@@ -43,21 +43,6 @@
             <canvas id="yearsChart" width="300" height="300"></canvas>
         </div>
       </div>
-
-      <!-- <div class="row">
-          <h3 id="feedbackQuestion">"Is there some feedback that you would like to share to help us improve our events?"</h3>
-          <table id="feedbackResponses">
-              <tr>
-                  <th>Response Text</th>
-              </tr>
-          </table>
-          <h3 id="topicQuestion">Is there a topic you would like to suggest for our next Hackathon?</h3>
-          <table id="topicResponses">
-              <tr>
-                  <th>Response Text</th>
-              </tr>
-          </table>
-      </div> -->
 
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -88,7 +73,7 @@
             </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default" id='lastPanel'>
           <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
               <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -98,7 +83,9 @@
           </div>
           <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
             <div class="panel-body">
-              <ol class='list-group' id="topicResponses"></ol>
+              <ol class='list-group' id="topicResponses">
+                <li class="list-group-item">Pending response...</li>
+              </ol>
             </div>
           </div>
         </div>
@@ -106,8 +93,11 @@
 
     </section>
 
-    <footer class="container">
-
+    <footer class='navbar-static-bottom'>
+      <div class="container">
+        <a alt='icon' href="#"><img id='footer-icon' src="//twilio.com/bundles/marketing/img/favicons/favicon.ico" /></a>
+        made by Jessica Hunt - Twilion for life <a href="http://www.twilio.com">@twilio</a> <i class="fa fa-heart"></i>
+      </div>
     </footer>
 
     <!-- JS Dependencies -->

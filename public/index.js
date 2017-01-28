@@ -27,8 +27,8 @@ $(function() {
                 {
                     label: 'Attendees',
                     data: dataSet,
-                    fillColor: 'rgba(75, 192, 192, 0.4)',
-                    borderWidth: 1,
+                    fillColor: 'rgba(75, 192, 192, 0.3)',
+                    borderWidth: 0.5,
 
                 }
             ]

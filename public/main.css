@@ -2,6 +2,9 @@
     text-align: center;
 }
 
+.panel-group {
+  margin-top: 40px;
+}
 footer {
     margin:40px 0;
 }
@@ -28,4 +31,20 @@ td {
 
 h3 {
   color: #777;
+}
+
+.panel-title {
+  color: #222236;
+}
+
+#footer-icon {
+  height: 20px;
+  width: 20px;
+}
+
+footer {
+  margin: 0;
+  padding: 20px 0;
+  background-color: #F5F5F5;
+  border-top: thin solid #DDD;
 }
