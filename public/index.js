@@ -83,9 +83,9 @@ $(function() {
 
     function row(response) {
         var tpl = '<li class="list-group-item">';
-        tpl += response.answer;
-        tpl += '</li>';
-        return tpl;
+          tpl += response.answer;
+          tpl += '</li>';
+          return tpl;
     }
 
     // add text responses to a list
@@ -97,26 +97,50 @@ $(function() {
         var levelContent = '';
         var phonenumbers = [];
 
+
         for (var i = 0, l = results.length; i<l; i++) {
           var thisPhone = results[i].phone;
-          if(phonenumbers.includes(thisPhone)){
-            continue;
-          }else{
+          console.log(thisPhone);
+
+
+          if(phonenumbers.includes(thisPhone) !== true){
+
+            console.log(phonenumbers.includes(thisPhone));
+            console.log(phonenumbers);
             var lastIndex = results[i].responses.length - 1;
             var textResponse = results[i].responses[lastIndex];
             var levelResponse = results[i].responses[2];
-            levelContent += row(levelResponse);
-            content += row(textResponse);
-            if(results[i].responses[lastIndex].id === '8'){
-              $feedbackresponses.append(content);
+
+
+            if(results[i].responses[lastIndex].id === '8' && results[i].responses[lastIndex].answer !== undefined){
+              content += row(textResponse);
+              $feedbackresponses.html(content);
+
+              console.log(results[i].responses[lastIndex].answer + ' is the answer');
+
             }else{
-              $topicresponses.append(content);
+              if(results[i].responses[lastIndex].answer !== undefined){
+                content += row(textResponse);
+                console.log(results[i].responses[lastIndex].answer + ' is the topic');
+                $topicresponses.html(content);
+              }
+
+
             }
-            $levelresponses.append(levelContent);
+            console.log(results[i].responses[2].answer);
+            if(results[i].responses[2].answer !== undefined){
+              levelContent += row(levelResponse);
+              $levelresponses.html(levelContent);
+            }
+
             phonenumbers.push(thisPhone);
+          }else{
+            continue;
           }
+
         }
     }
+
 
 
 
