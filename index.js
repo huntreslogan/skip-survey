@@ -7,6 +7,9 @@ var urlencoded = require('body-parser').urlencoded;
 var config = require('./config');
 var message = require('./routes/message');
 var results = require('./routes/results');
+var AccessToken = require('twilio').jwt.AccessToken;
+var SyncGrant = AccessToken.SyncGrant;
+
 
 // initialize MongoDB connection
 mongoose.connect(config.mongoUrl);

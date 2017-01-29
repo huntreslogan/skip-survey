@@ -2,11 +2,13 @@ module.exports = {
     // HTTP port
     port: process.env.PORT || 3000,
 
-    secret: process.env.APP_SECRET || 'keyboard cat',
+    service_sid:process.env.SERVICE_SID,
+    api_key:process.env.SYNC_API_KEY,
+    sync_secret:process.env.SYNC_SECRET,
 
     account_sid: process.env.TWILIO_ACCOUNT_SID,
+
     auth_token: process.env.TWILIO_AUTH_TOKEN,
-    twilio_number: '+12569527012',
     authy_key: process.env.AUTHY_API_KEY,
     // MongoDB connection string - MONGO_URL is for local dev,
     // MONGOLAB_URI is for the MongoLab add-on for Heroku deployment
