@@ -2,6 +2,71 @@
 
 $(function() {
 
+    function fetchAccessToken(handler) {
+      // We use jQuery to make an Ajax request to the server to retrieve our
+      // Access Token
+      $.getJSON('/token', {
+          // we pass along a "device" query parameter to identify the device we
+          // are connecting from. You would also pass along any other info needed for
+          // your server to establish the identity of the client
+          device: 'browser'
+      }, function(data) {
+
+
+
+
+          // The data sent back from the server should contain a long string, which
+          // is the token you'll need to initialize the SDK. This string is in a format
+          // called JWT (JSON Web Token) - more at http://jwt.io
+          // console.log(data.token);
+
+          // Since the starter app doesn't implement authentication, the server sends
+          // back a randomly generated username for the current client, which is how
+          // they will be identified while sending messages. If your app has a login
+          // system, you should use the e-mail address or username that uniquely identifies
+          // a user instead.
+          console.log(data.identity);
+
+          handler(data);
+      });
+    }
+
+    function initializeSync(data) {
+      console.log(data.token);
+      var accessManager = new Twilio.AccessManager(data.token);
+      // console.log(Object.keys(accessManager));
+      var syncClient = new Twilio.Sync.Client(data.token);
+      // console.log('Sync Initialized!');
+      accessManager.on('tokenExpired', refreshToken);
+      function refreshToken() {
+        fetchAccessToken(setNewToken);
+      }
+      //Give Access Manager the new token
+      // function setNewToken(tokenResponse) {
+      //   accessManager.updateToken(tokenResponse.token);
+      // }
+      //Need to update the Sync Client that the accessManager has a new token
+      // accessManager.on('tokenUpdated', function() {
+      //   syncClient.updateToken(tokenResponse.token);
+      // });
+
+      // Use syncClient here
+    }
+
+    fetchAccessToken(initializeSync);
+
+
+    //Generate random UUID to identify this browser tab
+    //For a more robust solution consider a library like
+    //fingerprintjs2: https://github.com/Valve/fingerprintjs2
+    function getDeviceId() {
+      return 'browser-' +
+        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+           var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+           return v.toString(16);
+         });
+    }
+
     // Chart attendees
     function attendees(results) {
         // Collect attendee results
