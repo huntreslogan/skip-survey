@@ -68,19 +68,42 @@ $(function() {
          });
     }
 
+    function getAttendees(results){
+      // Collect attendee results
+      var data = {};
+      for (var i = 0, l = results.length; i<l; i++) {
+        var attendeeResponse = results[i].responses[0];
+        var k = String(attendeeResponse.answer);
+        if(k !== 'false'){
+          if (!data[k]) data[k] = 1;
+          else data[k]++;
+        }
+      }
+
+      return data;
+      // // Assemble for graph
+      // var labels = Object.keys(data);
+      // var dataSet = [];
+      // for (var k in data)
+      //     dataSet.push(data[k]);
+    }
+
 
     // Chart attendees
     function attendees(results) {
         // Collect attendee results
-        var data = {};
-        for (var i = 0, l = results.length; i<l; i++) {
-          var attendeeResponse = results[i].responses[0];
-          var k = String(attendeeResponse.answer);
-          if(k !== 'false'){
-            if (!data[k]) data[k] = 1;
-            else data[k]++;
-          }
-        }
+        // var data = {};
+        // for (var i = 0, l = results.length; i<l; i++) {
+        //   var attendeeResponse = results[i].responses[0];
+        //   var k = String(attendeeResponse.answer);
+        //   if(k !== 'false'){
+        //     if (!data[k]) data[k] = 1;
+        //     else data[k]++;
+        //   }
+        // }
+        //
+
+        var data = getAttendees(results);
 
         // Assemble for graph
         var labels = Object.keys(data);
