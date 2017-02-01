@@ -34,23 +34,24 @@ $(function() {
     function initializeSync(data) {
       console.log(data.token);
       var accessManager = new Twilio.AccessManager(data.token);
-      // console.log(Object.keys(accessManager));
+
       var syncClient = new Twilio.Sync.Client(data.token);
-      // console.log('Sync Initialized!');
-      accessManager.on('tokenExpired', refreshToken);
-      function refreshToken() {
-        fetchAccessToken(setNewToken);
-      }
-      //Give Access Manager the new token
-      // function setNewToken(tokenResponse) {
-      //   accessManager.updateToken(tokenResponse.token);
-      // }
-      //Need to update the Sync Client that the accessManager has a new token
-      // accessManager.on('tokenUpdated', function() {
-      //   syncClient.updateToken(tokenResponse.token);
-      // });
+      console.log('Sync Initialized!');
 
       // Use syncClient here
+
+      //This code will create and/or open a Sync document
+      //Note the use of promises
+      syncClient.document('Attendees').then(function(doc) {
+          //Lets store it in our global variable
+          syncDoc = doc;
+
+
+          //Initialize attendee count to current state (if it exists)
+          var data = syncDoc.get();
+
+
+      });
     }
 
     fetchAccessToken(initializeSync);
@@ -67,15 +68,18 @@ $(function() {
          });
     }
 
+
     // Chart attendees
     function attendees(results) {
         // Collect attendee results
         var data = {};
         for (var i = 0, l = results.length; i<l; i++) {
-            var attendeeResponse = results[i].responses[0];
-            var k = String(attendeeResponse.answer);
+          var attendeeResponse = results[i].responses[0];
+          var k = String(attendeeResponse.answer);
+          if(k !== 'false'){
             if (!data[k]) data[k] = 1;
             else data[k]++;
+          }
         }
 
         // Assemble for graph
