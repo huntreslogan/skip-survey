@@ -1,43 +1,49 @@
 
 
 $(function() {
-
+    attendees();
+    var pusher;
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
-    var pusher = new Pusher('397476e7b9e8029d8307', {
-    encrypted: true
-    });
+    // pusher = new Pusher('397476e7b9e8029d8307', {
+    // encrypted: true
+    // });
 
-    var channel = pusher.subscribe('attendee-response');
+    // var channel = pusher.subscribe('attendee-response');
 
-    channel.bind('attendee-event', function(data) {
-    console.log(data.input);
-    });
+    // channel.bind('attendee-event', function(data) {
+    // console.log(data.input);
+    // });
 
-    function getAttendees(results){
+    function getAttendees(){
+      pusher = new Pusher('397476e7b9e8029d8307', {
+      encrypted: true
+      });
       // Collect attendee results
+      var channel = pusher.subscribe('attendee-response');
       var data = {};
-      // channel.bind('attendee-event', function(data) {
-      // console.log(data.input);
-      // var k = data.input;
-      // if(k !== 'false'){
-      //   if (!data[k]){
-      //     data[k] = 1;
-      //   }else{
-      //
-      //   }
-      // });
-      //
-      // }
-      for (var i = 0, l = results.length; i<l; i++) {
-        var attendeeResponse = results[i].responses[0];
-        var k = String(attendeeResponse.answer);
-        if(k !== 'false'){
-          if (!data[k]) data[k] = 1;
-          else data[k]++;
+      channel.bind('attendee-event', function(data) {
+      console.log(data.input);
+      var k = data.input;
+      if(k !== 'false'){
+        if (!data[k]){
+          data[k] = 1;
+        }else{
+          data[k]++;
         }
       }
+      });
+
+
+      // for (var i = 0, l = results.length; i<l; i++) {
+      //   var attendeeResponse = results[i].responses[0];
+      //   var k = String(attendeeResponse.answer);
+      //   if(k !== 'false'){
+      //     if (!data[k]) data[k] = 1;
+      //     else data[k]++;
+      //   }
+      // }
 
       return data;
       // // Assemble for graph
@@ -49,7 +55,7 @@ $(function() {
 
 
     // Chart attendees
-    function attendees(results) {
+    function attendees() {
         // Collect attendee results
         // var data = {};
         // for (var i = 0, l = results.length; i<l; i++) {
@@ -62,7 +68,7 @@ $(function() {
         // }
         //
 
-        var data = getAttendees(results);
+        var data = getAttendees();
 
         // Assemble for graph
         var labels = Object.keys(data);
@@ -203,7 +209,7 @@ $(function() {
         // Update charts and tables
         $('#total').html(data.results.length);
         entireEvent(data.results);
-        attendees(data.results);
+        // attendees(data.results);
         freeText(data.results);
         yearsCoding(data.results);
     }).fail(function(err) {
