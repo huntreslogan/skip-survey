@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
 
+
+
+
 var SurveyResponseSchema = new mongoose.Schema({
     // phone number of participant
     phone: String,
@@ -14,14 +17,15 @@ var SurveyResponseSchema = new mongoose.Schema({
 });
 
 
+
 SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
+    var Pusher = require('pusher');
     var surveyData = args.survey;
     var phone = args.phone;
     var input = args.input;
     var surveyResponse;
     var currentQuestion;
     var nextIndex;
-
 
     // Find current incomplete survey
     SurveyResponse.findOne({
@@ -30,11 +34,9 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         surveyResponse = doc || new SurveyResponse({
             phone: phone
         });
-        console.log("in the find " + surveyResponse.complete);
+        // console.log("in the find " + surveyResponse.complete);
         processInput();
     });
-
-
 
     function processInput() {
       var responseLength;
@@ -42,17 +44,17 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
       var previous;
 
       responseLength = surveyResponse.responses.length;
-      console.log(responseLength + " is the length now");
+      // console.log(responseLength + " is the length now");
 
       var questionResponse = {};
 
       if(responseLength <=1 ){
 
         currentQuestion = surveyData[responseLength];
-        console.log('not good');
+
       }else if(responseLength === 2 && surveyResponse.responses[responseLength - 1].answer < 3){
         currentQuestion = surveyData[2];
-        console.log(currentQuestion.id + " is the id when setting the currentQuestion");
+        // console.log(currentQuestion.id + " is the id when setting the currentQuestion");
       }else if(responseLength === 2 && surveyResponse.responses[responseLength - 1].answer >= 3){
         currentQuestion = surveyData[3];
       }else if (responseLength === 3){
@@ -77,7 +79,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
 
       if(responseLength > 1 && currentQuestion && surveyResponse.complete !== true){
         previous = surveyResponse.responses[responseLength - 1].id;
-        console.log(previous + ' is the last question asked');
+        // console.log(previous + ' is the last question asked');
       }
 
       function reask() {
@@ -97,7 +99,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
           }else{
             var isTrue = input === '1' || input.toLowerCase() === 'yes';
             questionResponse.answer = isTrue;
-            console.log("just asked a boolean");
+            // console.log("just asked a boolean");
           }
         } else if (currentQuestion.type === 'number'){
           var num = Number(input);
@@ -109,20 +111,20 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         }else if(input.toLowerCase() !== 'skip' && currentQuestion.type === 'text'){
           questionResponse.answer = input;
         }else {
-          console.log('skipping to the end');
+          // console.log('skipping to the end');
           surveyResponse.complete = true;
 
         }
         questionResponse.type = currentQuestion.type;
         questionResponse.id = currentQuestion.id;
-        console.log(questionResponse.id + ' is the id for the currentQuestion.');
+        // console.log(questionResponse.id + ' is the id for the currentQuestion.');
         surveyResponse.responses.push(questionResponse);
 
       }
 
       if(surveyResponse.responses.length === 6){
         surveyResponse.complete = true;
-        console.log("In the length handler and survey complete is: " + surveyResponse.complete);
+        // console.log("In the length handler and survey complete is: " + surveyResponse.complete);
       }
 
       surveyResponse.save(function(err) {

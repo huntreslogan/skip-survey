@@ -2,75 +2,34 @@
 
 $(function() {
 
-    // function fetchAccessToken(handler) {
-    //   // We use jQuery to make an Ajax request to the server to retrieve our
-    //   // Access Token
-    //   $.getJSON('/token', {
-    //       // we pass along a "device" query parameter to identify the device we
-    //       // are connecting from. You would also pass along any other info needed for
-    //       // your server to establish the identity of the client
-    //       device: 'browser'
-    //   }, function(data) {
-    //
-    //
-    //
-    //
-    //       // The data sent back from the server should contain a long string, which
-    //       // is the token you'll need to initialize the SDK. This string is in a format
-    //       // called JWT (JSON Web Token) - more at http://jwt.io
-    //       // console.log(data.token);
-    //
-    //       // Since the starter app doesn't implement authentication, the server sends
-    //       // back a randomly generated username for the current client, which is how
-    //       // they will be identified while sending messages. If your app has a login
-    //       // system, you should use the e-mail address or username that uniquely identifies
-    //       // a user instead.
-    //       console.log(data.identity);
-    //
-    //       handler(data);
-    //   });
-    // }
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
 
-    // function initializeSync(data) {
-    //   console.log(data.token);
-    //   var accessManager = new Twilio.AccessManager(data.token);
-    //
-    //   var syncClient = new Twilio.Sync.Client(data.token);
-    //   console.log('Sync Initialized!');
-    //
-    //   // Use syncClient here
-    //
-    //   //This code will create and/or open a Sync document
-    //   //Note the use of promises
-    //   syncClient.document('Attendees').then(function(doc) {
-    //       //Lets store it in our global variable
-    //       syncDoc = doc;
-    //
-    //
-    //       //Initialize attendee count to current state (if it exists)
-    //       var data = syncDoc.get();
-    //
-    //
-    //   });
-    // }
-    //
-    // fetchAccessToken(initializeSync);
-    //
-    //
-    // //Generate random UUID to identify this browser tab
-    // //For a more robust solution consider a library like
-    // //fingerprintjs2: https://github.com/Valve/fingerprintjs2
-    // function getDeviceId() {
-    //   return 'browser-' +
-    //     'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    //        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-    //        return v.toString(16);
-    //      });
-    // }
+    var pusher = new Pusher('397476e7b9e8029d8307', {
+    encrypted: true
+    });
+
+    var channel = pusher.subscribe('attendee-response');
+
+    channel.bind('attendee-event', function(data) {
+    console.log(data.input);
+    });
 
     function getAttendees(results){
       // Collect attendee results
       var data = {};
+      // channel.bind('attendee-event', function(data) {
+      // console.log(data.input);
+      // var k = data.input;
+      // if(k !== 'false'){
+      //   if (!data[k]){
+      //     data[k] = 1;
+      //   }else{
+      //
+      //   }
+      // });
+      //
+      // }
       for (var i = 0, l = results.length; i<l; i++) {
         var attendeeResponse = results[i].responses[0];
         var k = String(attendeeResponse.answer);
@@ -132,7 +91,7 @@ $(function() {
         // Collect  results
         var yes = 0, no = 0;
         for (var i = 0, l = results.length; i<l; i++) {
-            var eventResponse = results[i].responses[3];
+          var eventResponse = results[i].responses[3];
             eventResponse.answer ? yes++ : no++;
         }
 
@@ -192,13 +151,13 @@ $(function() {
 
         for (var i = 0, l = results.length; i<l; i++) {
           var thisPhone = results[i].phone;
-          console.log(thisPhone);
+          // console.log(thisPhone);
 
 
           if(phonenumbers.includes(thisPhone) !== true){
 
-            console.log(phonenumbers.includes(thisPhone));
-            console.log(phonenumbers);
+            // console.log(phonenumbers.includes(thisPhone));
+            // console.log(phonenumbers);
             var lastIndex = results[i].responses.length - 1;
             var textResponse = results[i].responses[lastIndex];
             var levelResponse = results[i].responses[2];
@@ -208,18 +167,18 @@ $(function() {
               content += row(textResponse);
               $feedbackresponses.html(content);
 
-              console.log(results[i].responses[lastIndex].answer + ' is the answer');
+              // console.log(results[i].responses[lastIndex].answer + ' is the answer');
 
             }else{
               if(results[i].responses[lastIndex].answer !== undefined){
                 content += row(textResponse);
-                console.log(results[i].responses[lastIndex].answer + ' is the topic');
+                // console.log(results[i].responses[lastIndex].answer + ' is the topic');
                 $topicresponses.html(content);
               }
 
 
             }
-            console.log(results[i].responses[2].answer);
+            // console.log(results[i].responses[2].answer);
             if(results[i].responses[2].answer !== undefined){
               levelContent += row(levelResponse);
               $levelresponses.html(levelContent);

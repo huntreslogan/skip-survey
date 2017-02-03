@@ -1,10 +1,26 @@
 var twilio = require('twilio');
 var SurveyResponse = require('../models/SurveyResponse');
 var survey = require('../survey_data');
+var Pusher = require('pusher');
+var config = require('../config');
+
+var pusher = new Pusher({
+  appId: config.app_id,
+  key: config.app_key,
+  secret: config.secret_key,
+  encrypted: true, // optional, defaults to false
+});
 
 module.exports = function(request, response) {
   var phone = request.body.From;
   var input = request.body.Body;
+
+  // function triggerInput(){
+  //   pusher.trigger('attendee-response', 'attendee-event', {
+  //     input: input,
+  //   });
+  // }
+
 
   function respond(message) {
     var twilio = require('twilio');
@@ -45,6 +61,14 @@ module.exports = function(request, response) {
 
 
   function handleNextQuestion(err, surveyResponse, questionIndex) {
+
+    console.log(input);
+    if(questionIndex === 1 && input === 'yes'){
+      pusher.trigger('attendee-response', 'attendee-event', {
+        input: input,
+      });
+    }
+      
     var question = survey[questionIndex];
     var responseMessage = '';
     // console.log(questionIndex);

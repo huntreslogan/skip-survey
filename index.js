@@ -10,6 +10,23 @@ var results = require('./routes/results');
 var AccessToken = require('twilio').jwt.AccessToken;
 var SyncGrant = AccessToken.SyncGrant;
 var randomUsername = require('./randos');
+var Pusher = require('pusher');
+
+var pusher = new Pusher({
+  appId: config.app_id,
+  key: config.app_key,
+  secret: config.secret_key,
+  encrypted: true, // optional, defaults to false
+});
+
+
+
+// pusher.trigger('my-channel', 'my-event', {
+//   message: "pizza pizza"
+// });
+
+
+console.log("This is my new branch");
 
 // initialize MongoDB connection
 mongoose.connect(config.mongoUrl);

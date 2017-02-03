@@ -8,6 +8,10 @@ module.exports = {
     account_sid: process.env.TWILIO_ACCOUNT_SID,
     auth_token: process.env.TWILIO_AUTH_TOKEN,
     authy_key: process.env.AUTHY_API_KEY,
+    app_id: process.env.APP_ID,
+    app_key: process.env.APP_KEY,
+    secret_key: process.env.SECRET_KEY,
+
     // MongoDB connection string - MONGO_URL is for local dev,
     // MONGOLAB_URI is for the MongoLab add-on for Heroku deployment
     mongoUrl: process.env.MONGOLAB_URI || process.env.MONGO_URL || process.env.MONGODB_URI
