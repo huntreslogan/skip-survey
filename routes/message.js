@@ -76,6 +76,14 @@ module.exports = function(request, response) {
       });
     }
 
+    if(surveyResponse.responses.length === 2){
+      console.log(question.id + " is the id for the number trigger");
+      console.log(input + " is the input for the number trigger");
+      pusher.trigger('number-response', 'number-event', {
+        input: input,
+      });
+    }
+
 
     var responseMessage = '';
     // console.log(questionIndex);

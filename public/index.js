@@ -3,6 +3,8 @@
 $(function() {
     attendees();
     entireEvent();
+    yearsCoding();
+
     var pusher;
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
@@ -174,23 +176,40 @@ $(function() {
         // ]);
     }
 
-    function yearsCoding(results){
-      var underThree = 0, threeAndOver = 0;
-
-      for(var i=0,l = results.length; i<l; i++){
-        var yearsResponse = results[i].responses[1];
-        if(yearsResponse.answer < 3){
-          underThree++;
-        }else{
-          threeAndOver++;
-        }
-      }
+    function yearsCoding(){
+      var underThree = 1, threeAndOver = 0;
 
       var ctx = document.getElementById('yearsChart').getContext('2d');
       var eventChart = new Chart(ctx).Doughnut([
           { value: threeAndOver, label: '3 years+', color: '#A3DFBD', highlight: '#E9F2F6' },
           { value: underThree, label: 'Less than 3 years ', color: '#FFB14E', highlight: '#FFDBB7' }
       ]);
+
+      var numberChannel = pusher.subscribe('number-response');
+
+      numberChannel.bind('number-event', function(data){
+        var years = data.input;
+
+        if(years < 3){
+          underThree++;
+        }else{
+          threeAndOver++;
+        }
+        var ctx = document.getElementById('yearsChart').getContext('2d');
+        var eventChart = new Chart(ctx).Doughnut([
+            { value: threeAndOver, label: '3 years+', color: '#A3DFBD', highlight: '#E9F2F6' },
+            { value: underThree, label: 'Less than 3 years ', color: '#FFB14E', highlight: '#FFDBB7' }
+        ]);
+
+      });
+      // for(var i=0,l = results.length; i<l; i++){
+      //   var yearsResponse = results[i].responses[1];
+      //   if(yearsResponse.answer < 3){
+      //     underThree++;
+      //   }else{
+      //     threeAndOver++;
+      //   }
+      // }
     }
 
     // poor man's html template for a response table row
@@ -277,7 +296,7 @@ $(function() {
         // entireEvent(data.results);
         // attendees(data.results);
         freeText(data.results);
-        yearsCoding(data.results);
+        // yearsCoding(data.results);
     }).fail(function(err) {
         console.log(err);
         alert('failed to load results data :(');
