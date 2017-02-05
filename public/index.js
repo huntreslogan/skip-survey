@@ -17,23 +17,7 @@ $(function() {
     // });
 
     function getAttendees(){
-      pusher = new Pusher('397476e7b9e8029d8307', {
-      encrypted: true
-      });
-      // Collect attendee results
-      var channel = pusher.subscribe('attendee-response');
-      var data = {};
-      channel.bind('attendee-event', function(data) {
-      console.log(data.input);
-      var k = data.input;
-      if(k !== 'false'){
-        if (!data[k]){
-          data[k] = 1;
-        }else{
-          data[k]++;
-        }
-      }
-      });
+
 
 
       // for (var i = 0, l = results.length; i<l; i++) {
@@ -56,27 +40,19 @@ $(function() {
 
     // Chart attendees
     function attendees() {
+        pusher = new Pusher('397476e7b9e8029d8307', {
+        encrypted: true
+        });
         // Collect attendee results
-        // var data = {};
-        // for (var i = 0, l = results.length; i<l; i++) {
-        //   var attendeeResponse = results[i].responses[0];
-        //   var k = String(attendeeResponse.answer);
-        //   if(k !== 'false'){
-        //     if (!data[k]) data[k] = 1;
-        //     else data[k]++;
-        //   }
-        // }
-        //
-
-        var data = getAttendees();
-
-        // Assemble for graph
-        var labels = Object.keys(data);
+        var channel = pusher.subscribe('attendee-response');
+        var total = {};
         var dataSet = [];
-        for (var k in data)
-            dataSet.push(data[k]);
 
-        // Render chart
+        var k = 'true';
+        total[k] = 1;
+        dataSet.push(total[k]);
+        var labels = Object.keys(total);
+
         var ctx = document.getElementById('attendeeChart').getContext('2d');
         var attendeeChart = new Chart(ctx).Bar({
             labels: labels,
@@ -84,12 +60,76 @@ $(function() {
                 {
                     label: 'Attendees',
                     data: dataSet,
-                    fillColor: 'rgba(75, 192, 192, 0.3)',
+                    fillColor: '#133A65',
                     borderWidth: 0.5,
 
                 }
             ]
         });
+
+        channel.bind('attendee-event', function(data) {
+        if(data.input === 'yes'){
+          k = 'true';
+          console.log(k);
+        }else{
+          k = 'false';
+        }
+
+        if(k !== 'false'){
+          if (!total[k]){
+            total[k] = 1;
+          }else{
+            dataSet[0]++;
+          }
+        }
+
+        // var labels = Object.keys(total);
+        console.log("Label is " + labels);
+        console.log(total);
+
+        // for (var k in total)
+        // dataSet.push(total[k]);
+
+        console.log(dataSet[0]);
+
+        var ctx = document.getElementById('attendeeChart').getContext('2d');
+        var attendeeChart = new Chart(ctx).Bar({
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Attendees',
+                    data: dataSet,
+                    fillColor: '#133A65',
+                    borderWidth: 0.5,
+
+                }
+            ]
+        });
+        });
+
+
+        // Assemble for graph
+        // var labels = Object.keys(data);
+        // console.log(labels);
+        // console.log(data[k]);
+        //
+        // for (var k in data)
+        //     dataSet.push(data[k]);
+
+        // Render chart
+        // var ctx = document.getElementById('attendeeChart').getContext('2d');
+        // var attendeeChart = new Chart(ctx).Bar({
+        //     labels: labels,
+        //     datasets: [
+        //         {
+        //             label: 'Attendees',
+        //             data: dataSet,
+        //             fillColor: 'rgba(75, 192, 192, 0.3)',
+        //             borderWidth: 0.5,
+        //
+        //         }
+        //     ]
+        // });
     }
 
     // Chart yes/no responses to event duration question

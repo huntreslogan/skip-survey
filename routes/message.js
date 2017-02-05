@@ -63,12 +63,12 @@ module.exports = function(request, response) {
   function handleNextQuestion(err, surveyResponse, questionIndex) {
 
     console.log(input);
-    if(questionIndex === 1 && input === 'yes'){
+    if(questionIndex === 1 && input.toLowerCase() === 'yes'){
       pusher.trigger('attendee-response', 'attendee-event', {
-        input: input,
+        input: input.toLowerCase(),
       });
     }
-      
+
     var question = survey[questionIndex];
     var responseMessage = '';
     // console.log(questionIndex);
