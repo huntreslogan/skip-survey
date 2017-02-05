@@ -2,6 +2,7 @@
 
 $(function() {
     attendees();
+    entireEvent();
     var pusher;
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
@@ -40,7 +41,7 @@ $(function() {
 
     // Chart attendees
     function attendees() {
-        pusher = new Pusher('', {
+        pusher = new Pusher('397476e7b9e8029d8307', {
         encrypted: true
         });
         // Collect attendee results
@@ -133,19 +134,44 @@ $(function() {
     }
 
     // Chart yes/no responses to event duration question
-    function entireEvent(results) {
-        // Collect  results
-        var yes = 0, no = 0;
-        for (var i = 0, l = results.length; i<l; i++) {
-          var eventResponse = results[i].responses[3];
-            eventResponse.answer ? yes++ : no++;
-        }
+    function entireEvent() {
 
+
+        // Collect  results
+        var yes = 1, no = 1;
         var ctx = document.getElementById('eventChart').getContext('2d');
         var eventChart = new Chart(ctx).Pie([
             { value: yes, label: 'Yes', color: '#1ABC9C', highlight: '#bcddd7' },
             { value: no, label: 'No', color: '#E84C3D', highlight: '#FBC7C1' }
         ]);
+
+        var eventChannel = pusher.subscribe('entireEvent-response');
+
+        eventChannel.bind('entire-event', function(data){
+          var answer = data.input;
+          console.log(answer);
+          if(answer === 'yes'){
+            yes++;
+          }else{
+            no++;
+          }
+
+          var ctx = document.getElementById('eventChart').getContext('2d');
+          var eventChart = new Chart(ctx).Pie([
+              { value: yes, label: 'Yes', color: '#1ABC9C', highlight: '#bcddd7' },
+              { value: no, label: 'No', color: '#E84C3D', highlight: '#FBC7C1' }
+          ]);
+        });
+        // for (var i = 0, l = results.length; i<l; i++) {
+        //   var eventResponse = results[i].responses[3];
+        //     eventResponse.answer ? yes++ : no++;
+        // }
+        //
+        // var ctx = document.getElementById('eventChart').getContext('2d');
+        // var eventChart = new Chart(ctx).Pie([
+        //     { value: yes, label: 'Yes', color: '#1ABC9C', highlight: '#bcddd7' },
+        //     { value: no, label: 'No', color: '#E84C3D', highlight: '#FBC7C1' }
+        // ]);
     }
 
     function yearsCoding(results){
@@ -248,7 +274,7 @@ $(function() {
     }).done(function(data) {
         // Update charts and tables
         $('#total').html(data.results.length);
-        entireEvent(data.results);
+        // entireEvent(data.results);
         // attendees(data.results);
         freeText(data.results);
         yearsCoding(data.results);

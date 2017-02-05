@@ -55,21 +55,28 @@ module.exports = function(request, response) {
       survey:survey
     }, handleNextQuestion);
   }else {
-    return respond('Please text hackathon if you would like to take our survey.');
+    return respond('Please text "hackathon" if you would like to take our survey.');
   }
   });
 
 
   function handleNextQuestion(err, surveyResponse, questionIndex) {
-
-    console.log(input);
+    var question = survey[questionIndex];
     if(questionIndex === 1 && input.toLowerCase() === 'yes'){
       pusher.trigger('attendee-response', 'attendee-event', {
         input: input.toLowerCase(),
       });
     }
 
-    var question = survey[questionIndex];
+    if(surveyResponse.responses.length === 4){
+      console.log(questionIndex + ' is the actaul index');
+      console.log(input + ' is the input');
+      pusher.trigger('entireEvent-response', 'entire-event', {
+        input: input.toLowerCase(),
+      });
+    }
+
+
     var responseMessage = '';
     // console.log(questionIndex);
 
