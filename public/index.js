@@ -40,7 +40,7 @@ $(function() {
 
     // Chart attendees
     function attendees() {
-        pusher = new Pusher('397476e7b9e8029d8307', {
+        pusher = new Pusher('', {
         encrypted: true
         });
         // Collect attendee results
