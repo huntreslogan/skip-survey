@@ -15,12 +15,6 @@ module.exports = function(request, response) {
   var phone = request.body.From;
   var input = request.body.Body;
 
-  // function triggerInput(){
-  //   pusher.trigger('attendee-response', 'attendee-event', {
-  //     input: input,
-  //   });
-  // }
-
 
   function respond(message) {
     var twilio = require('twilio');
