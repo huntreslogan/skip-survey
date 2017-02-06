@@ -4,7 +4,7 @@ $(function() {
     attendees();
     entireEvent();
     yearsCoding();
-
+    freeText();
     var pusher;
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
@@ -225,13 +225,13 @@ $(function() {
 
     function row(response) {
         var tpl = '<li class="list-group-item">';
-          tpl += response.answer;
+          tpl += response;
           tpl += '</li>';
           return tpl;
     }
 
     // add text responses to a list
-    function freeText(results) {
+    function freeText() {
         var $feedbackresponses = $('#feedbackResponses');
         var $topicresponses = $('#topicResponses');
         var $levelresponses = $('#levelResponses');
@@ -239,48 +239,75 @@ $(function() {
         var levelContent = '';
         var phonenumbers = [];
 
+        var textChannel = pusher.subscribe('text-response');
 
-        for (var i = 0, l = results.length; i<l; i++) {
-          var thisPhone = results[i].phone;
-          // console.log(thisPhone);
-
-
-          if(phonenumbers.includes(thisPhone) !== true){
-
-            // console.log(phonenumbers.includes(thisPhone));
-            // console.log(phonenumbers);
-            var lastIndex = results[i].responses.length - 1;
-            var textResponse = results[i].responses[lastIndex];
-            var levelResponse = results[i].responses[2];
-
-
-            if(results[i].responses[lastIndex].id === '8' && results[i].responses[lastIndex].answer !== undefined){
-              content += row(textResponse);
-              $feedbackresponses.html(content);
-
-              // console.log(results[i].responses[lastIndex].answer + ' is the answer');
-
+        textChannel.bind('text-event', function(data){
+          console.log(data.input + ' is the text input');
+          console.log(data.id + ' is the question');
+          var id = data.id;
+          var answer = data.input;
+          if(answer.toLowerCase() !== 'skip'){
+            if(id === '9'){
+              content += row(answer);
+              $topicresponses.append(content);
             }else{
-              if(results[i].responses[lastIndex].answer !== undefined){
-                content += row(textResponse);
-                // console.log(results[i].responses[lastIndex].answer + ' is the topic');
-                $topicresponses.html(content);
-              }
-
-
+              content += row(answer);
+              $feedbackresponses.append(content);
             }
-            // console.log(results[i].responses[2].answer);
-            if(results[i].responses[2].answer !== undefined){
-              levelContent += row(levelResponse);
-              $levelresponses.html(levelContent);
-            }
-
-            phonenumbers.push(thisPhone);
-          }else{
-            continue;
           }
+        });
 
-        }
+        var levelChannel = pusher.subscribe('level-response');
+
+        levelChannel.bind('level-event', function(data){
+          var levelAnswer = data.input;
+          console.log(levelAnswer);
+          levelContent += row(levelAnswer);
+          $levelresponses.append(levelContent);
+        });
+
+
+        // for (var i = 0, l = results.length; i<l; i++) {
+        //   var thisPhone = results[i].phone;
+        //   // console.log(thisPhone);
+
+
+        //   if(phonenumbers.includes(thisPhone) !== true){
+        //
+        //     // console.log(phonenumbers.includes(thisPhone));
+        //     // console.log(phonenumbers);
+        //     var lastIndex = results[i].responses.length - 1;
+        //     var textResponse = results[i].responses[lastIndex];
+        //     var levelResponse = results[i].responses[2];
+        //
+        //
+        //     if(results[i].responses[lastIndex].id === '8' && results[i].responses[lastIndex].answer !== undefined){
+        //       content += row(textResponse);
+        //       $feedbackresponses.html(content);
+        //
+        //       // console.log(results[i].responses[lastIndex].answer + ' is the answer');
+        //
+        //     }else{
+        //       if(results[i].responses[lastIndex].answer !== undefined){
+        //         content += row(textResponse);
+        //         // console.log(results[i].responses[lastIndex].answer + ' is the topic');
+        //         $topicresponses.html(content);
+        //       }
+        //
+        //
+        //     }
+        //     // console.log(results[i].responses[2].answer);
+        //     if(results[i].responses[2].answer !== undefined){
+        //       levelContent += row(levelResponse);
+        //       $levelresponses.html(levelContent);
+        //     }
+        //
+        //     phonenumbers.push(thisPhone);
+        //   }else{
+        //     continue;
+        //   }
+        //
+        // }
     }
 
 
@@ -295,7 +322,7 @@ $(function() {
         $('#total').html(data.results.length);
         // entireEvent(data.results);
         // attendees(data.results);
-        freeText(data.results);
+        // freeText(data.results);
         // yearsCoding(data.results);
     }).fail(function(err) {
         console.log(err);

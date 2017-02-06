@@ -99,6 +99,10 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
           }else{
             var isTrue = input === '1' || input.toLowerCase() === 'yes';
             questionResponse.answer = isTrue;
+            questionResponse.type = currentQuestion.type;
+            questionResponse.id = currentQuestion.id;
+            // console.log(questionResponse.id + ' is the id for the currentQuestion.');
+            surveyResponse.responses.push(questionResponse);
             // console.log("just asked a boolean");
           }
         } else if (currentQuestion.type === 'number'){
@@ -107,18 +111,26 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
             reask();
           } else{
             questionResponse.answer = num;
+            questionResponse.type = currentQuestion.type;
+            questionResponse.id = currentQuestion.id;
+            // console.log(questionResponse.id + ' is the id for the currentQuestion.');
+            surveyResponse.responses.push(questionResponse);
           }
         }else if(input.toLowerCase() !== 'skip' && currentQuestion.type === 'text'){
           questionResponse.answer = input;
+          questionResponse.type = currentQuestion.type;
+          questionResponse.id = currentQuestion.id;
+          // console.log(questionResponse.id + ' is the id for the currentQuestion.');
+          surveyResponse.responses.push(questionResponse);
         }else {
           // console.log('skipping to the end');
           surveyResponse.complete = true;
 
         }
-        questionResponse.type = currentQuestion.type;
-        questionResponse.id = currentQuestion.id;
-        // console.log(questionResponse.id + ' is the id for the currentQuestion.');
-        surveyResponse.responses.push(questionResponse);
+        // questionResponse.type = currentQuestion.type;
+        // questionResponse.id = currentQuestion.id;
+        // // console.log(questionResponse.id + ' is the id for the currentQuestion.');
+        // surveyResponse.responses.push(questionResponse);
 
       }
 
@@ -134,7 +146,7 @@ SurveyResponseSchema.statics.advanceSurvey = function(args, cb) {
         }else if(surveyResponse.complete === true){
           console.log("done!");
           cb.call(surveyResponse, err, surveyResponse, null);
-        }else if(responseLength === 0){
+        }else if(responseLength === 0 && questionResponse.answer){
           console.log("all good and survey complete is: " + surveyResponse.complete + ' and response length = ' + responseLength);
           cb.call(surveyResponse, err, surveyResponse, responseLength + 1);
         }else if(responseLength >= 1){

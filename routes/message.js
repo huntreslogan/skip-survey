@@ -85,6 +85,24 @@ module.exports = function(request, response) {
     }
 
 
+    if(surveyResponse.responses.length === 6){
+      var lastQuestion = surveyResponse.responses.length -1;
+      console.log(surveyResponse.responses[lastQuestion].id + ' is the id of the last question');
+      var id = surveyResponse.responses[lastQuestion].id;
+      pusher.trigger('text-response', 'text-event', {
+        input: input,
+        id: id
+      });
+      console.log(input + " is the input when length 6");
+    }
+
+    if(surveyResponse.responses.length === 3){
+      console.log(input + ' is the input when length is 3');
+      pusher.trigger('level-response', 'level-event', {
+        input: input
+      });
+    }
+
     var responseMessage = '';
     // console.log(questionIndex);
 
