@@ -16,7 +16,7 @@ $(function() {
     // Chart attendees
     function attendees() {
 
-        pusher = new Pusher('app_key', {
+        pusher = new Pusher('397476e7b9e8029d8307', {
         encrypted: true
         });
         var channel = pusher.subscribe('attendee-response');
